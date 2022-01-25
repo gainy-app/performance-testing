@@ -1,0 +1,17 @@
+query FetchRecommendedCollections($profileId: Int!) @cached(ttl: 300) {
+    get_recommended_collections(profile_id: $profileId) {
+        id
+        collection {
+            ...RemoteShortCollectionDetails
+        }
+    }
+}
+
+fragment RemoteShortCollectionDetails on collections {
+    id
+    name
+    image_url
+    enabled
+    description
+    size
+}

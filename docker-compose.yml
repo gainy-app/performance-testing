@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  master:
+    image: locustio/locust
+    ports:
+      - "8089:8089"
+    volumes:
+      - ./src/:/mnt/locust
+    entrypoint: /bin/bash
+    command: -c "locust -f /mnt/locust/locustfile.py --master -H $$HASURA_HOST"
+    env_file: .env.local
+
+  worker:
+    image: locustio/locust
+    volumes:
+      - ./src/:/mnt/locust
+    command: -f /mnt/locust/locustfile.py --worker --master-host master
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    env_file: .env.local
